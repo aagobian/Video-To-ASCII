@@ -1,14 +1,19 @@
 import cv2 as cv
-import numpy as np
 
 
+# function to convert image grayscale values into ascii character representations
 def convert_to_ascii(image):
-    pixels = image.flatten().tolist()
-    for pixel in pixels:
-        ascii_rep = round(pixel / 4)
-        if ascii_rep == 64:
-            ascii_rep -= 1
-        ascii_list.append(ascii_chars[ascii_rep])
+    ascii_image = ""
+    w, h = image.shape()
+    for i in range(w):
+        for p in range(h):
+            pixel = image[i, p]
+            ascii_rep = round(pixel / 4)
+            if ascii_rep == 64:
+                ascii_rep -= 1
+            ascii_image += ascii_chars[ascii_rep]
+        ascii_image += "\n"
+    return ascii_image
 
 
 # function to pixelate an input image by resizing down and back up
@@ -20,7 +25,6 @@ def pixelate_img(image, h, w):
 
 # ASCII characters to be used for image output
 ascii_chars = "$@B%8&WM#*oahkbdpqwmZLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:,^`'."
-ascii_list = []
 
 # set up webcam
 cam = cv.VideoCapture(0)
@@ -33,12 +37,12 @@ while True:
 
     # image preprocessing
     img = cv.flip(img, 1)
-    img = pixelate_img(img, height, width)
-    img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    convert_to_ascii(img)
+    pixel_img = pixelate_img(img, height, width)
+    gray_img = cv.cvtColor(pixel_img, cv.COLOR_BGR2GRAY)
+    ascii_img = convert_to_ascii(gray_img)
 
     # display image on screen
-    cv.imshow("Video", img)
+    cv.imshow("Video", ascii_img)
 
     # press esc key to exit
     key = cv.waitKey(1)
