@@ -10,10 +10,7 @@ def convert_to_ascii(image):
     ascii_image[ascii_image >= 16] = 15
     ascii_chars_array = np.array(ascii_chars)
     ascii_image_array = ascii_chars_array[ascii_image]
-    ascii_text = ""
-    for row in ascii_image_array:
-        ascii_text += ''.join(row)
-        ascii_text += '\n'
+    ascii_text = '\n'.join([''.join(row) for row in ascii_image_array])
     return ascii_text
 
 
@@ -35,7 +32,7 @@ cam = cv.VideoCapture(0)
 root = Tk()
 root.title("Press 0 to exit.")
 root.bind('0', detect_key_press)
-c = Canvas(root, height=1080, width=1920, bg="black")
+c = Canvas(root, height=1080, width=920, bg="black")
 c.pack()
 
 # loop to capture video from the camera and display it on the screen
